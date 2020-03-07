@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "534599524956",
+    "firebase_url": "https://ytrfirebaseproject.firebaseio.com",
+    "project_id": "ytrfirebaseproject",
+    "storage_bucket": "ytrfirebaseproject.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:534599524956:android:92a061ee4b5c6fb0f6bc99",
+        "android_client_info": {
+          "package_name": "com.example.ytr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "534599524956-3lir4rm7fdkdjcq5vi32e2lgl0ssk93f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ytr",
+            "certificate_hash": "2f646979c35012df225b2da4e3c7572db8bb7209"
+          }
+        },
+        {
+          "client_id": "534599524956-u4fhfdi07bl0t5105gism51c167d96af.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtKNfqTR2C9jKNf7TtD7enWvWuGWUnito"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "534599524956-u4fhfdi07bl0t5105gism51c167d96af.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
