@@ -10,4 +10,34 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+    <EditText
+        android:id="@+id/video_src_txt"
+        android:layout_marginTop="5pt"
+        android:textSize="15sp"
+        android:layout_width="100pt"
+        android:layout_height="20pt"
+        android:layout_marginLeft="3pt"
+        android:layout_below="@id/youtube_view" />
+
+    <Button
+        android:id="@+id/video_src_btn"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="4pt"
+        android:layout_marginLeft="5pt"
+        android:layout_marginRight="5pt"
+        android:layout_width="70pt"
+        android:layout_height="20pt"
+        android:layout_below="@+id/youtube_view"
+        android:text="@string/search"
+        android:layout_toRightOf="@id/video_src_txt" />
+
+    <TextView
+        android:id="@+id/user_counter"
+        android:layout_width="wrap_content"
+        android:layout_height="15pt"
+        android:layout_alignParentBottom="true"
+        android:textSize="20sp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="15dp" />
+
 </RelativeLayout>
