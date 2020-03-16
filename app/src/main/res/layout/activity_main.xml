@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layoutDirection="ltr"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -39,5 +40,22 @@
         android:textSize="20sp"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="15dp" />
+
+    <TextView
+        android:layout_width="40pt"
+        android:layout_height="15pt"
+        android:textSize="20sp"
+        android:layout_toStartOf="@id/user_counter"
+        android:layout_marginEnd="15dp"
+        android:layout_alignParentBottom="true"
+        android:text="@string/users" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/videos_recycler_view"
+        android:layout_width="150pt"
+        android:layout_height="180pt"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10pt"
+        android:layout_below="@+id/video_src_btn" />
 
 </RelativeLayout>

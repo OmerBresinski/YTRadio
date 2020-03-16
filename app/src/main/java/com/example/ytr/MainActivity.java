@@ -1,15 +1,20 @@
 package com.example.ytr;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,9 +38,9 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
     private int currentVideoSeekTime = 0;
     private boolean hasRecentlyPaused = false;
     private String videoSourceID = "";
-    private YouTubePlayer player;
+    public static YouTubePlayer player;
     private YouTubePlayerView youTubeView;
-    private PlaybackListener playbackListener;
+    public static PlaybackListener playbackListener;
     private Button changeSrcBtn;
     private EditText videoSrcInput;
     private TextView userCounter;
@@ -44,11 +49,15 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
     private DatabaseReference videoTime;
     private DatabaseReference userCount;
     private DatabaseReference playerStatus;
+    private YoutubeAdapter youtubeAdapter;
+    private RecyclerView mRecyclerView;
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initRecyclerView();
         initUIViewListeners();
         initServerConnection();
         initYoutubeListener();
@@ -70,6 +79,14 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
         currentUserCount--;
         hasRecentlyPaused = true;
         userCount.setValue(currentUserCount);
+    }
+
+    private void initRecyclerView(){
+        mRecyclerView = findViewById(R.id.videos_recycler_view);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        handler = new Handler();
+
     }
 
     private void getVideoSeekTime(){
@@ -104,13 +121,11 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 currentUserCount = dataSnapshot.getValue(Integer.class);
-                Log.d("First:", ""+currentUserCount);
                 userCounter.setText(currentUserCount+"");
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.w("Firebase Log:", databaseError.toException());
             }
         });
     }
@@ -164,8 +179,19 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
             public void onClick(View v) {
                 String srcString = videoSrcInput.getText().toString();
                 searchOnYoutube(srcString);
+                InputMethodManager inputManager = (InputMethodManager)
+                        getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                        InputMethodManager.HIDE_NOT_ALWAYS);
             }
         });
+    }
+
+    private void fillYoutubeVideos(){
+        youtubeAdapter = new YoutubeAdapter(getApplicationContext(),searchResults);
+        mRecyclerView.setAdapter(youtubeAdapter);
+        youtubeAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -205,6 +231,11 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
             public void run(){
                 YoutubeConnector yc = new YoutubeConnector(MainActivity.this);
                 searchResults = yc.search(keywords);
+                handler.post(new Runnable(){
+                    public void run(){
+                        fillYoutubeVideos();
+                    }
+                });
             }
         }.start();
     }
