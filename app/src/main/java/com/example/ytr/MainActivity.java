@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -34,20 +33,16 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
 
     private static final int RECOVERY_REQUEST = 1;
     private List<VideoItem> searchResults = new ArrayList<>();
-    private int currentUserCount;
     private int currentVideoSeekTime = 0;
-    private boolean hasRecentlyPaused = false;
     private String videoSourceID = "";
     public static YouTubePlayer player;
     private YouTubePlayerView youTubeView;
     public static PlaybackListener playbackListener;
     private Button changeSrcBtn;
     private EditText videoSrcInput;
-    private TextView userCounter;
     private FirebaseDatabase database;
     private DatabaseReference videoSrc;
     private DatabaseReference videoTime;
-    private DatabaseReference userCount;
     private DatabaseReference playerStatus;
     private YoutubeAdapter youtubeAdapter;
     private RecyclerView mRecyclerView;
@@ -61,24 +56,6 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
         initUIViewListeners();
         initServerConnection();
         initYoutubeListener();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if(hasRecentlyPaused){
-            currentUserCount++;
-            userCount.setValue(currentUserCount);
-            hasRecentlyPaused = false;
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        currentUserCount--;
-        hasRecentlyPaused = true;
-        userCount.setValue(currentUserCount);
     }
 
     private void initRecyclerView(){
@@ -106,28 +83,11 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
 
     private void initServerConnection(){
         database = FirebaseDatabase.getInstance();
-//        chat = database.getReference(PATH_PLAYER_CHAT);
         videoSrc = database.getReference(PATH_PLAYER_SRC);
         playerStatus = database.getReference(PATH_PLAYER_STATUS);
         videoTime = database.getReference(PATH_PLAYER_VIDEO_TIME);
-        userCount = database.getReference(PATH_PLAYER_USER_COUNT);
         initVideoSrcListener();
         initPlayerStatusListener();
-        initUserCount();
-    }
-
-    private void initUserCount(){
-        userCount.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                currentUserCount = dataSnapshot.getValue(Integer.class);
-                userCounter.setText(currentUserCount+"");
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
     }
 
     private void initPlayerStatusListener(){
@@ -172,7 +132,6 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
     }
 
     private void initUIViewListeners(){
-        userCounter = findViewById(R.id.user_counter);
         changeSrcBtn = findViewById(R.id.video_src_btn);
         videoSrcInput = findViewById(R.id.video_src_txt);
         changeSrcBtn.setOnClickListener(new View.OnClickListener() {
@@ -200,8 +159,6 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
             this.player = player;
             this.player.setPlaybackEventListener(playbackListener);
             getVideoSeekTime();
-            currentUserCount++;
-            userCount.setValue(currentUserCount);
         }
     }
 
